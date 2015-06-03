@@ -1204,7 +1204,7 @@ if (typeof define === 'function' && define.amd)
 },{}],2:[function(require,module,exports){
 module.exports={
   "name": "multidep",
-  "version": "0.1.0-beta.1",
+  "version": "0.1.0-beta.2",
   "description": "Ability to require multiple versions of the same module when using requirejs loader",
   "main": "index.js",
   "scripts": {
@@ -1337,7 +1337,7 @@ exports.init = function (options) {
     var protocol = window.location.protocol;
     if (typeof options === 'string') {
         options = {
-            repositryUrl: options
+            repositoryUrl: options
         }
     }
     // load requirejs if it not yet loaded
