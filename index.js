@@ -33,8 +33,11 @@ exports.init = function (options) {
                                 for (var version in versions) {
                                     if (versions.hasOwnProperty(version)) {
                                         var pathKey = libName + '@' + version;
+                                        var path = versions[version];
+                                        if (path.slice(-3) === '.js')
+                                            path = path.slice(0, -3);
                                         //TODO protocol
-                                        paths[pathKey] = protocol + versions[version];
+                                        paths[pathKey] = protocol + path;
                                     }
                                 }
                             }
