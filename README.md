@@ -3,10 +3,10 @@ multidep
 
 ##example
 
-1. Publish repository of dependencies to any public url
+1. Publish dependencies repository to any public url
 
 	```js
-	define('_multidep_repository', {
+	define({
         "dependencies": {
             "lodash": {
                 "2.4.1": "//cdn.jsdelivr.net/lodash/2.4.1/lodash.min.js",
@@ -19,15 +19,21 @@ multidep
     });
 	```
 
-2. Init **multidep** with repository url, and require modules with semver format
+2. Init **multidep** with repository url, and define module
 
 	```js
 	multidep.init('//path.to/repository.js').then(() => {
-	    requirejs(['lodash@^2.0.0', 'lodash@~3.0.7', 'moment@2.10.3'],
+	    define('my-module', ['lodash@^2.0.0', 'lodash@~3.0.7', 'moment@2.10.3'],
 	        function (lodash_1, lodash_2, moment) {
-	            console.log(lodash_1.VERSION); // → 2.4.1
-	            console.log(lodash_2.VERSION); // → 3.0.8
-	            console.log(moment.version);   // → 2.10.3
+	            return [lodash_1.VERSION, lodash_2.VERSION, moment.version]
 	        })
 	});
 	```
+
+3. Require module
+
+    ```js
+    requirejs(['my-module'], function(myModule) {
+        console.log(myModule); // → ["2.4.1", "3.0.8", "2.10.3"]
+    }
+    ```
