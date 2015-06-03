@@ -1204,7 +1204,7 @@ if (typeof define === 'function' && define.amd)
 },{}],2:[function(require,module,exports){
 module.exports={
   "name": "multidep",
-  "version": "0.1.0-beta.6",
+  "version": "0.1.0-beta.7",
   "description": "Ability to require multiple versions of the same module when using requirejs loader",
   "main": "index.js",
   "scripts": {
@@ -1292,22 +1292,24 @@ module.exports = function (dependencies) {
         else if (args[0] instanceof Array)
             deps = args[0];
 
-        for (var i = 0; i < deps.length; i++) {
-            var dep = deps[i];
-            if (dep.indexOf('@') !== -1) {
-                // need to resolve the dependency
-                var nameVer = dep.split('@');
-                // i.e. module@^1.0.0
-                if (nameVer.length === 2) {
-                    var moduleName    = nameVer[0],
-                        versionRange  = nameVer[1];
+        if (deps) {
+            for (var i = 0; i < deps.length; i++) {
+                var dep = deps[i];
+                if (dep.indexOf('@') !== -1) {
+                    // need to resolve the dependency
+                    var nameVer = dep.split('@');
+                    // i.e. module@^1.0.0
+                    if (nameVer.length === 2) {
+                        var moduleName    = nameVer[0],
+                            versionRange  = nameVer[1];
 
-                    if (dependencies[moduleName] && semver.validRange(versionRange)) {
-                        var versions = Object.keys(dependencies[moduleName]);
-                        var version = semver.maxSatisfying(versions, versionRange);
-                        if (version) {
-                            // fix dependency version on existing in repository
-                            deps[i] = moduleName + '@' + version;
+                        if (dependencies[moduleName] && semver.validRange(versionRange)) {
+                            var versions = Object.keys(dependencies[moduleName]);
+                            var version = semver.maxSatisfying(versions, versionRange);
+                            if (version) {
+                                // fix dependency version on existing in repository
+                                deps[i] = moduleName + '@' + version;
+                            }
                         }
                     }
                 }
