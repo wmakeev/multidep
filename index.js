@@ -13,7 +13,7 @@ exports.init = function (options) {
     var protocol = window.location.protocol;
     if (typeof options === 'string') {
         options = {
-            repositryUrl: options
+            repositoryUrl: options
         }
     }
     // load requirejs if it not yet loaded
