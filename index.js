@@ -24,7 +24,7 @@ exports.init = function (options) {
                 var repositoryUrl = protocol + options.repositoryUrl;
                 requirejs([repositoryUrl],
                     function (repository) {
-                        var path = {},
+                        var paths = {},
                             dependencies = repository.dependencies;
 
                         for (var libName in dependencies) {
@@ -34,14 +34,14 @@ exports.init = function (options) {
                                     if (versions.hasOwnProperty(version)) {
                                         var pathKey = libName + '@' + version;
                                         //TODO protocol
-                                        path[pathKey] = protocol + versions[version];
+                                        paths[pathKey] = protocol + versions[version];
                                     }
                                 }
                             }
                         }
 
                         requirejs.config({
-                            path: path
+                            paths: paths
                         });
 
                         wrapDefine(dependencies);

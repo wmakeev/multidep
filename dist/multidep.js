@@ -1204,7 +1204,7 @@ if (typeof define === 'function' && define.amd)
 },{}],2:[function(require,module,exports){
 module.exports={
   "name": "multidep",
-  "version": "0.1.0-beta.4",
+  "version": "0.1.0-beta.5",
   "description": "Ability to require multiple versions of the same module when using requirejs loader",
   "main": "index.js",
   "scripts": {
@@ -1350,7 +1350,7 @@ exports.init = function (options) {
                 var repositoryUrl = protocol + options.repositoryUrl;
                 requirejs([repositoryUrl],
                     function (repository) {
-                        var path = {},
+                        var paths = {},
                             dependencies = repository.dependencies;
 
                         for (var libName in dependencies) {
@@ -1360,14 +1360,14 @@ exports.init = function (options) {
                                     if (versions.hasOwnProperty(version)) {
                                         var pathKey = libName + '@' + version;
                                         //TODO protocol
-                                        path[pathKey] = protocol + versions[version];
+                                        paths[pathKey] = protocol + versions[version];
                                     }
                                 }
                             }
                         }
 
                         requirejs.config({
-                            path: path
+                            paths: paths
                         });
 
                         wrapDefine(dependencies);
