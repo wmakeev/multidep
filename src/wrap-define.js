@@ -40,10 +40,12 @@ module.exports = function (dependencies) {
             }
         }
 
-        window.define.amd = {
-            jQuery: true
-        };
-
         return _oldDefine.apply(this, args);
-    }
+    };
+
+    window.define.amd = {
+        jQuery: true
+    };
+
+    window.define.multidep = true;
 };

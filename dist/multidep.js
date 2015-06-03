@@ -1204,7 +1204,7 @@ if (typeof define === 'function' && define.amd)
 },{}],2:[function(require,module,exports){
 module.exports={
   "name": "multidep",
-  "version": "0.1.0-beta.2",
+  "version": "0.1.0-beta.3",
   "description": "Ability to require multiple versions of the same module when using requirejs loader",
   "main": "index.js",
   "scripts": {
@@ -1314,12 +1314,14 @@ module.exports = function (dependencies) {
             }
         }
 
-        window.define.amd = {
-            jQuery: true
-        };
-
         return _oldDefine.apply(this, args);
-    }
+    };
+
+    window.define.amd = {
+        jQuery: true
+    };
+
+    window.define.multidep = true;
 };
 },{"semver":1}],5:[function(require,module,exports){
 /**
