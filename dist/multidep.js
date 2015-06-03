@@ -1202,6 +1202,41 @@ if (typeof define === 'function' && define.amd)
 );
 
 },{}],2:[function(require,module,exports){
+module.exports={
+  "name": "multidep",
+  "version": "0.1.0-beta.1",
+  "description": "Ability to require multiple versions of the same module when using requirejs loader",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "build": "browserify index.js -o dist/multidep.js -s multidep"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wmakeev/moysklad-client/multidep"
+  },
+  "keywords": [
+    "script",
+    "browser",
+    "loader",
+    "requirejs",
+    "dependency",
+    "manager",
+    "multiversion",
+    "semver"
+  ],
+  "author": "Vitaliy V. Makeev",
+  "license": "MIT",
+  "dependencies": {
+    "semver": "^4.3.6"
+  },
+  "devDependencies": {
+    "browserify": "^10.2.3",
+    "chai": "^2.3.0"
+  }
+}
+
+},{}],3:[function(require,module,exports){
 /**
  * loadScript
  * Date: 03.06.15
@@ -1230,13 +1265,13 @@ module.exports = function (src, globalName) {
             // this.onload = null here is necessary
             // because even IE9 works not like others
             this.onerror = this.onload = null;
-            reject(new Error('Failed to load ' + this.src))
+            reject(new Error('load-script: failed to load [' + this.src + ']'))
         };
 
         head.appendChild(script);
     })
 };
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 /**
  * wrap-define
  * Date: 03.06.15
@@ -1286,7 +1321,7 @@ module.exports = function (dependencies) {
         return _oldDefine.apply(this, args);
     }
 };
-},{"semver":1}],4:[function(require,module,exports){
+},{"semver":1}],5:[function(require,module,exports){
 /**
  * index
  * Date: 03.06.15
@@ -1299,15 +1334,20 @@ var requirejs_cdn = 'https://cdn.jsdelivr.net/requirejs/2.1.14/require.min.js';
 var wrapDefine = require('./src/wrap-define');
 
 exports.init = function (options) {
-    return new Promise(function (resolve, reject) {
-        // load requirejs if it not yet loaded
-        return loadScript(requirejs_cdn, 'requirejs')
-            .then(function () {
-                return loadScript(options.repositoryUrl);
-            })
-            .then(function () {
-                return new Promise(function (resolve, reject) {
-                    requirejs(['_multidep_repository'], function (repository) {
+    var protocol = window.location.protocol;
+    if (typeof options === 'string') {
+        options = {
+            repositryUrl: options
+        }
+    }
+    // load requirejs if it not yet loaded
+    return loadScript(requirejs_cdn, 'requirejs')
+        .then(function () {
+            return new Promise(function (resolve, reject) {
+                //TODO protocol
+                var repositoryUrl = protocol + options.repositoryUrl;
+                requirejs([repositoryUrl],
+                    function (repository) {
                         var path = {},
                             dependencies = repository.dependencies;
 
@@ -1317,8 +1357,8 @@ exports.init = function (options) {
                                 for (var version in versions) {
                                     if (versions.hasOwnProperty(version)) {
                                         var pathKey = libName + '@' + version;
-                                        //TODO detect protocol
-                                        path[pathKey] = 'https:' + versions[version];
+                                        //TODO protocol
+                                        path[pathKey] = protocol + versions[version];
                                     }
                                 }
                             }
@@ -1330,10 +1370,12 @@ exports.init = function (options) {
 
                         wrapDefine(dependencies);
                         resolve();
-                    });
-                });
+                    },
+                    reject);
             });
-    });
+        });
 };
-},{"./src/tools/load-script":2,"./src/wrap-define":3}]},{},[4])(4)
+
+exports.version = require('./package').version;
+},{"./package":2,"./src/tools/load-script":3,"./src/wrap-define":4}]},{},[5])(5)
 });
