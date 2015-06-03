@@ -10,15 +10,20 @@ var requirejs_cdn = 'https://cdn.jsdelivr.net/requirejs/2.1.14/require.min.js';
 var wrapDefine = require('./src/wrap-define');
 
 exports.init = function (options) {
-    return new Promise(function (resolve, reject) {
-        // load requirejs if it not yet loaded
-        return loadScript(requirejs_cdn, 'requirejs')
-            .then(function () {
-                return loadScript(options.repositoryUrl);
-            })
-            .then(function () {
-                return new Promise(function (resolve, reject) {
-                    requirejs(['_multidep_repository'], function (repository) {
+    var protocol = window.location.protocol;
+    if (typeof options === 'string') {
+        options = {
+            repositryUrl: options
+        }
+    }
+    // load requirejs if it not yet loaded
+    return loadScript(requirejs_cdn, 'requirejs')
+        .then(function () {
+            return new Promise(function (resolve, reject) {
+                //TODO protocol
+                var repositoryUrl = protocol + options.repositoryUrl;
+                requirejs([repositoryUrl],
+                    function (repository) {
                         var path = {},
                             dependencies = repository.dependencies;
 
@@ -28,8 +33,8 @@ exports.init = function (options) {
                                 for (var version in versions) {
                                     if (versions.hasOwnProperty(version)) {
                                         var pathKey = libName + '@' + version;
-                                        //TODO detect protocol
-                                        path[pathKey] = 'https:' + versions[version];
+                                        //TODO protocol
+                                        path[pathKey] = protocol + versions[version];
                                     }
                                 }
                             }
@@ -41,8 +46,10 @@ exports.init = function (options) {
 
                         wrapDefine(dependencies);
                         resolve();
-                    });
-                });
+                    },
+                    reject);
             });
-    });
+        });
 };
+
+exports.version = require('./package').version;
