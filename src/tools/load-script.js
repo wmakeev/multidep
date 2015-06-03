@@ -26,7 +26,7 @@ module.exports = function (src, globalName) {
             // this.onload = null here is necessary
             // because even IE9 works not like others
             this.onerror = this.onload = null;
-            reject(new Error('Failed to load ' + this.src))
+            reject(new Error('load-script: failed to load [' + this.src + ']'))
         };
 
         head.appendChild(script);
