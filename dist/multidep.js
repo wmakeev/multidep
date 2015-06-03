@@ -1204,7 +1204,7 @@ if (typeof define === 'function' && define.amd)
 },{}],2:[function(require,module,exports){
 module.exports={
   "name": "multidep",
-  "version": "0.1.0-beta.3",
+  "version": "0.1.0-beta.4",
   "description": "Ability to require multiple versions of the same module when using requirejs loader",
   "main": "index.js",
   "scripts": {
@@ -1302,7 +1302,7 @@ module.exports = function (dependencies) {
                     var moduleName    = nameVer[0],
                         versionRange  = nameVer[1];
 
-                    if (dependencies[moduleName] && semver.valid(versionRange)) {
+                    if (dependencies[moduleName] && semver.validRange(versionRange)) {
                         var versions = Object.keys(dependencies[moduleName]);
                         var version = semver.maxSatisfying(versions, versionRange);
                         if (version) {
