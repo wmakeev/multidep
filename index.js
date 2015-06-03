@@ -19,10 +19,12 @@ exports.init = function (options) {
             .then(function () {
                 return new Promise(function (resolve, reject) {
                     requirejs(['_multidep_repository'], function (repository) {
-                        var path = {};
-                        for (var libName in repository) {
-                            if (repository.hasOwnProperty(libName)) {
-                                var versions = repository[libName];
+                        var path = {},
+                            dependencies = repository.dependencies;
+
+                        for (var libName in dependencies) {
+                            if (dependencies.hasOwnProperty(libName)) {
+                                var versions = dependencies[libName];
                                 for (var version in versions) {
                                     if (versions.hasOwnProperty(version)) {
                                         var pathKey = libName + '@' + version;
@@ -32,10 +34,12 @@ exports.init = function (options) {
                                 }
                             }
                         }
+
                         requirejs.config({
                             path: path
                         });
-                        wrapDefine(repository);
+
+                        wrapDefine(dependencies);
                         resolve();
                     });
                 });

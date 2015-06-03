@@ -6,7 +6,7 @@
 
 var semver = require('semver');
 
-module.exports = function (repository) {
+module.exports = function (dependencies) {
     var _oldDefine = window.define;
 
     window.define = function () {
@@ -28,8 +28,8 @@ module.exports = function (repository) {
                     var moduleName    = nameVer[0],
                         versionRange  = nameVer[1];
 
-                    if (repository[moduleName] && semver.valid(versionRange)) {
-                        var versions = Object.keys(repository[moduleName]);
+                    if (dependencies[moduleName] && semver.valid(versionRange)) {
+                        var versions = Object.keys(dependencies[moduleName]);
                         var version = semver.maxSatisfying(versions, versionRange);
                         if (version) {
                             // fix dependency version on existing in repository

@@ -1,7 +1,7 @@
 {
   "name": "multidep",
   "version": "0.1.0",
-  "description": "Manage dependencies in browser",
+  "description": "Ability to require multiple versions of the same module when using requirejs loader",
   "main": "index.js",
   "scripts": {
     "test": "mocha",
