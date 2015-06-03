@@ -1,4 +1,4 @@
-define('_multidep_repository', {
+define({
     "dependencies": {
         "lodash": {
             "2.4.1": "//cdn.jsdelivr.net/lodash/2.4.1/lodash.min.js",
