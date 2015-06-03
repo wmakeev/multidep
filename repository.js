@@ -1,5 +1,4 @@
 define('_multidep_repository', {
-    "version": "1.0.0",
     "dependencies": {
         "lodash": {
             "2.4.1": "//cdn.jsdelivr.net/lodash/2.4.1/lodash.min.js",
@@ -8,5 +7,6 @@ define('_multidep_repository', {
         "moment": {
             "2.10.3": "//cdn.jsdelivr.net/momentjs/2.10.3/moment.min.js"
         }
-    }
+    },
+    "format_version": "1"
 });
