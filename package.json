@@ -1,0 +1,32 @@
+{
+  "name": "multidep",
+  "version": "0.1.0",
+  "description": "Manage dependencies in browser",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "build": "browserify index.js -o dist/multidep.js -s multidep"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wmakeev/moysklad-client/multidep"
+  },
+  "keywords": [
+    "script",
+    "browser",
+    "loader",
+    "requirejs",
+    "dependency",
+    "manager",
+    "multiversion",
+    "semver"
+  ],
+  "author": "Vitaliy V. Makeev",
+  "license": "MIT",
+  "dependencies": {
+    "semver": "^4.3.6"
+  },
+  "devDependencies": {
+    "browserify": "^10.2.3"
+  }
+}
