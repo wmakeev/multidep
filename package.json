@@ -1,11 +1,12 @@
 {
   "name": "multidep",
-  "version": "0.1.0-beta.7",
-  "description": "Ability to require multiple versions of the same module when using requirejs loader",
-  "main": "index.js",
+  "version": "0.1.0-beta.8",
+  "description": "Dependency management tool for independent modules",
+  "main": "src/index.js",
   "scripts": {
     "test": "mocha",
-    "build": "browserify index.js -o dist/multidep.js -s multidep"
+    "_build": "browserify index.js -o dist/multidep.js -s multidep",
+    "build": "multidep --taist-site-name МойСклад --taist-site-regexp online.moysklad.ru"
   },
   "repository": {
     "type": "git",
@@ -19,13 +20,12 @@
     "dependency",
     "manager",
     "multiversion",
-    "semver"
+    "semver",
+    "taist"
   ],
   "author": "Vitaliy V. Makeev",
   "license": "MIT",
-  "dependencies": {
-    "semver": "^4.3.6"
-  },
+  "dependencies": {},
   "devDependencies": {
     "browserify": "^10.2.3",
     "chai": "^2.3.0"

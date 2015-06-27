@@ -1,11 +1,20 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.multidep = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-;(function(exports) {
-
 // export the class if we are in a Node-like system.
 if (typeof module === 'object' && module.exports === exports)
   exports = module.exports = SemVer;
 
 // The debug function is excluded entirely from the minified version.
+/* nomin */ var debug;
+/* nomin */ if (typeof process === 'object' &&
+    /* nomin */ process.env &&
+    /* nomin */ process.env.NODE_DEBUG &&
+    /* nomin */ /\bsemver\b/i.test(process.env.NODE_DEBUG))
+  /* nomin */ debug = function() {
+    /* nomin */ var args = Array.prototype.slice.call(arguments, 0);
+    /* nomin */ args.unshift('SEMVER');
+    /* nomin */ console.log.apply(console, args);
+    /* nomin */ };
+/* nomin */ else
+  /* nomin */ debug = function() {};
 
 // Note: this is the semver.org version of the spec that it implements
 // Not necessarily the package version of this code.
@@ -220,7 +229,7 @@ src[STAR] = '(<|>)?=?\\s*\\*';
 // Compile to actual regexp objects.
 // All are flag-free, unless they were created above with a flag.
 for (var i = 0; i < R; i++) {
-  ;
+  debug(i, src[i]);
   if (!re[i])
     re[i] = new RegExp(src[i]);
 }
@@ -278,7 +287,7 @@ function SemVer(version, loose) {
   if (!(this instanceof SemVer))
     return new SemVer(version, loose);
 
-  ;
+  debug('SemVer', version, loose);
   this.loose = loose;
   var m = version.trim().match(loose ? re[LOOSE] : re[FULL]);
 
@@ -334,7 +343,7 @@ SemVer.prototype.toString = function() {
 };
 
 SemVer.prototype.compare = function(other) {
-  ;
+  debug('SemVer.compare', this.version, this.loose, other);
   if (!(other instanceof SemVer))
     other = new SemVer(other, this.loose);
 
@@ -366,7 +375,7 @@ SemVer.prototype.comparePre = function(other) {
   do {
     var a = this.prerelease[i];
     var b = other.prerelease[i];
-    ;
+    debug('prerelease compare', i, a, b);
     if (a === undefined && b === undefined)
       return 0;
     else if (b === undefined)
@@ -653,7 +662,7 @@ function Comparator(comp, loose) {
   if (!(this instanceof Comparator))
     return new Comparator(comp, loose);
 
-  ;
+  debug('comparator', comp, loose);
   this.loose = loose;
   this.parse(comp);
 
@@ -662,7 +671,7 @@ function Comparator(comp, loose) {
   else
     this.value = this.operator + this.semver.version;
 
-  ;
+  debug('comp', this);
 }
 
 var ANY = {};
@@ -693,7 +702,7 @@ Comparator.prototype.toString = function() {
 };
 
 Comparator.prototype.test = function(version) {
-  ;
+  debug('Comparator.test', version, this.loose);
 
   if (this.semver === ANY)
     return true;
@@ -749,14 +758,14 @@ Range.prototype.toString = function() {
 Range.prototype.parseRange = function(range) {
   var loose = this.loose;
   range = range.trim();
-  ;
+  debug('range', range, loose);
   // `1.2.3 - 1.2.4` => `>=1.2.3 <=1.2.4`
   var hr = loose ? re[HYPHENRANGELOOSE] : re[HYPHENRANGE];
   range = range.replace(hr, hyphenReplace);
-  ;
+  debug('hyphen replace', range);
   // `> 1.2.3 < 1.2.5` => `>1.2.3 <1.2.5`
   range = range.replace(re[COMPARATORTRIM], comparatorTrimReplace);
-  ;
+  debug('comparator trim', range, re[COMPARATORTRIM]);
 
   // `~ 1.2.3` => `~1.2.3`
   range = range.replace(re[TILDETRIM], tildeTrimReplace);
@@ -801,15 +810,15 @@ function toComparators(range, loose) {
 // already replaced the hyphen ranges
 // turn into a set of JUST comparators.
 function parseComparator(comp, loose) {
-  ;
+  debug('comp', comp);
   comp = replaceCarets(comp, loose);
-  ;
+  debug('caret', comp);
   comp = replaceTildes(comp, loose);
-  ;
+  debug('tildes', comp);
   comp = replaceXRanges(comp, loose);
-  ;
+  debug('xrange', comp);
   comp = replaceStars(comp, loose);
-  ;
+  debug('stars', comp);
   return comp;
 }
 
@@ -832,7 +841,7 @@ function replaceTildes(comp, loose) {
 function replaceTilde(comp, loose) {
   var r = loose ? re[TILDELOOSE] : re[TILDE];
   return comp.replace(r, function(_, M, m, p, pr) {
-    ;
+    debug('tilde', comp, _, M, m, p, pr);
     var ret;
 
     if (isX(M))
@@ -843,7 +852,7 @@ function replaceTilde(comp, loose) {
       // ~1.2 == >=1.2.0- <1.3.0-
       ret = '>=' + M + '.' + m + '.0 <' + M + '.' + (+m + 1) + '.0';
     else if (pr) {
-      ;
+      debug('replaceTilde pr', pr);
       if (pr.charAt(0) !== '-')
         pr = '-' + pr;
       ret = '>=' + M + '.' + m + '.' + p + pr +
@@ -853,7 +862,7 @@ function replaceTilde(comp, loose) {
       ret = '>=' + M + '.' + m + '.' + p +
             ' <' + M + '.' + (+m + 1) + '.0';
 
-    ;
+    debug('tilde return', ret);
     return ret;
   });
 }
@@ -871,10 +880,10 @@ function replaceCarets(comp, loose) {
 }
 
 function replaceCaret(comp, loose) {
-  ;
+  debug('caret', comp, loose);
   var r = loose ? re[CARETLOOSE] : re[CARET];
   return comp.replace(r, function(_, M, m, p, pr) {
-    ;
+    debug('caret', comp, _, M, m, p, pr);
     var ret;
 
     if (isX(M))
@@ -887,7 +896,7 @@ function replaceCaret(comp, loose) {
       else
         ret = '>=' + M + '.' + m + '.0 <' + (+M + 1) + '.0.0';
     } else if (pr) {
-      ;
+      debug('replaceCaret pr', pr);
       if (pr.charAt(0) !== '-')
         pr = '-' + pr;
       if (M === '0') {
@@ -901,7 +910,7 @@ function replaceCaret(comp, loose) {
         ret = '>=' + M + '.' + m + '.' + p + pr +
               ' <' + (+M + 1) + '.0.0';
     } else {
-      ;
+      debug('no pr');
       if (M === '0') {
         if (m === '0')
           ret = '>=' + M + '.' + m + '.' + p +
@@ -914,13 +923,13 @@ function replaceCaret(comp, loose) {
               ' <' + (+M + 1) + '.0.0';
     }
 
-    ;
+    debug('caret return', ret);
     return ret;
   });
 }
 
 function replaceXRanges(comp, loose) {
-  ;
+  debug('replaceXRanges', comp, loose);
   return comp.split(/\s+/).map(function(comp) {
     return replaceXRange(comp, loose);
   }).join(' ');
@@ -930,7 +939,7 @@ function replaceXRange(comp, loose) {
   comp = comp.trim();
   var r = loose ? re[XRANGELOOSE] : re[XRANGE];
   return comp.replace(r, function(ret, gtlt, M, m, p, pr) {
-    ;
+    debug('xRange', comp, ret, gtlt, M, m, p, pr);
     var xM = isX(M);
     var xm = xM || isX(m);
     var xp = xm || isX(p);
@@ -984,7 +993,7 @@ function replaceXRange(comp, loose) {
       ret = '>=' + M + '.' + m + '.0 <' + M + '.' + (+m + 1) + '.0';
     }
 
-    ;
+    debug('xRange return', ret);
 
     return ret;
   });
@@ -993,7 +1002,7 @@ function replaceXRange(comp, loose) {
 // Because * is AND-ed with everything else in the comparator,
 // and '' means "any version", just remove the *s entirely.
 function replaceStars(comp, loose) {
-  ;
+  debug('replaceStars', comp, loose);
   // Looseness is ignored here.  star is always as loose as it gets!
   return comp.trim().replace(re[STAR], '');
 }
@@ -1059,7 +1068,7 @@ function testSet(set, version) {
     // However, `1.2.4-alpha.notready` should NOT be allowed,
     // even though it's within the range set by the comparators.
     for (var i = 0; i < set.length; i++) {
-      ;
+      debug(set[i].semver);
       if (set[i].semver === ANY)
         continue;
 
@@ -1190,199 +1199,3 @@ function outside(version, range, hilo, loose) {
   }
   return true;
 }
-
-// Use the define() function if we're in AMD land
-if (typeof define === 'function' && define.amd)
-  define(exports);
-
-})(
-  typeof exports === 'object' ? exports :
-  typeof define === 'function' && define.amd ? {} :
-  semver = {}
-);
-
-},{}],2:[function(require,module,exports){
-module.exports={
-  "name": "multidep",
-  "version": "0.1.0-beta.7",
-  "description": "Ability to require multiple versions of the same module when using requirejs loader",
-  "main": "index.js",
-  "scripts": {
-    "test": "mocha",
-    "build": "browserify index.js -o dist/multidep.js -s multidep"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/wmakeev/moysklad-client/multidep"
-  },
-  "keywords": [
-    "script",
-    "browser",
-    "loader",
-    "requirejs",
-    "dependency",
-    "manager",
-    "multiversion",
-    "semver"
-  ],
-  "author": "Vitaliy V. Makeev",
-  "license": "MIT",
-  "dependencies": {
-    "semver": "^4.3.6"
-  },
-  "devDependencies": {
-    "browserify": "^10.2.3",
-    "chai": "^2.3.0"
-  }
-}
-
-},{}],3:[function(require,module,exports){
-/**
- * loadScript
- * Date: 03.06.15
- * Vitaliy V. Makeev (w.makeev@gmail.com)
- */
-
-module.exports = function (src, globalName) {
-    return new Promise(function(resolve, reject) {
-        if (globalName && window[globalName]) return resolve();
-
-        var head = document.head || document.getElementsByTagName('head')[0];
-        var script = document.createElement('script');
-
-        script.type     = 'text/javascript';
-        script.charset  = 'utf8';
-        script.async    = true;
-        script.src      = src;
-
-        script.onload = function () {
-            this.onerror = this.onload = null;
-            console.debug('load-script: [' + (globalName || src) + '] injected');
-            resolve();
-        };
-
-        script.onerror = function () {
-            // this.onload = null here is necessary
-            // because even IE9 works not like others
-            this.onerror = this.onload = null;
-            reject(new Error('load-script: failed to load [' + this.src + ']'))
-        };
-
-        head.appendChild(script);
-    })
-};
-},{}],4:[function(require,module,exports){
-/**
- * wrap-define
- * Date: 03.06.15
- * Vitaliy V. Makeev (w.makeev@gmail.com)
- */
-
-var semver = require('semver');
-
-module.exports = function (dependencies) {
-    var _oldDefine = window.define;
-
-    window.define = function () {
-        var args = Array.prototype.slice.call(arguments, 0);
-
-        var deps;
-        if (typeof args[0] === 'string' && args[1] instanceof Array)
-            deps = args[1];
-        else if (args[0] instanceof Array)
-            deps = args[0];
-
-        if (deps) {
-            for (var i = 0; i < deps.length; i++) {
-                var dep = deps[i];
-                if (dep.indexOf('@') !== -1) {
-                    // need to resolve the dependency
-                    var nameVer = dep.split('@');
-                    // i.e. module@^1.0.0
-                    if (nameVer.length === 2) {
-                        var moduleName    = nameVer[0],
-                            versionRange  = nameVer[1];
-
-                        if (dependencies[moduleName] && semver.validRange(versionRange)) {
-                            var versions = Object.keys(dependencies[moduleName]);
-                            var version = semver.maxSatisfying(versions, versionRange);
-                            if (version) {
-                                // fix dependency version on existing in repository
-                                deps[i] = moduleName + '@' + version;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return _oldDefine.apply(this, args);
-    };
-
-    window.define.amd = {
-        jQuery: true
-    };
-
-    window.define.multidep = true;
-};
-},{"semver":1}],5:[function(require,module,exports){
-/**
- * index
- * Date: 03.06.15
- * Vitaliy V. Makeev (w.makeev@gmail.com)
- */
-
-var loadScript = require('./src/tools/load-script');
-var requirejs_cdn = 'https://cdn.jsdelivr.net/requirejs/2.1.14/require.min.js';
-
-var wrapDefine = require('./src/wrap-define');
-
-exports.init = function (options) {
-    var protocol = window.location.protocol;
-    if (typeof options === 'string') {
-        options = {
-            repositoryUrl: options
-        }
-    }
-    // load requirejs if it not yet loaded
-    return loadScript(requirejs_cdn, 'requirejs')
-        .then(function () {
-            return new Promise(function (resolve, reject) {
-                //TODO protocol
-                var repositoryUrl = protocol + options.repositoryUrl;
-                requirejs([repositoryUrl],
-                    function (repository) {
-                        var paths = {},
-                            dependencies = repository.dependencies;
-
-                        for (var libName in dependencies) {
-                            if (dependencies.hasOwnProperty(libName)) {
-                                var versions = dependencies[libName];
-                                for (var version in versions) {
-                                    if (versions.hasOwnProperty(version)) {
-                                        var pathKey = libName + '@' + version;
-                                        var path = versions[version];
-                                        if (path.slice(-3) === '.js')
-                                            path = path.slice(0, -3);
-                                        //TODO protocol
-                                        paths[pathKey] = protocol + path;
-                                    }
-                                }
-                            }
-                        }
-
-                        requirejs.config({
-                            paths: paths
-                        });
-
-                        wrapDefine(dependencies);
-                        resolve();
-                    },
-                    reject);
-            });
-        });
-};
-
-exports.version = require('./package').version;
-},{"./package":2,"./src/tools/load-script":3,"./src/wrap-define":4}]},{},[5])(5)
-});

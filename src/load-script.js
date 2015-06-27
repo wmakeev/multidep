@@ -1,9 +1,3 @@
-/**
- * loadScript
- * Date: 03.06.15
- * Vitaliy V. Makeev (w.makeev@gmail.com)
- */
-
 module.exports = function (src, globalName) {
     return new Promise(function(resolve, reject) {
         if (globalName && window[globalName]) return resolve();
