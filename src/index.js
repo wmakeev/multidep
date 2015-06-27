@@ -11,24 +11,29 @@ var protocol = window.location.protocol;
 
 require('./load-script')(requirejsCdn, 'requirejs')
   .then(function () {
-    requirejs.config({
-      paths: {
-        multiver: multiversionCdn
-      },
-      config: {
-        multiver: {
-          repositoryUrl: repositoryCdn,
-          resolver: resolver
+    requirejs([repositoryCdn], function (repo) {
+      requirejs.config({
+        paths: {
+          multiver: multiversionCdn
+        },
+        config: {
+          multiver: {
+            repository: repo,
+            resolver: resolver
+          }
         }
-      }
+      });
+
+      wrapDefine();
+
+      publish('amd:ready', {
+        define: window.define,
+        require: window.requirejs
+      });
     });
 
-    wrapDefine();
 
-    publish('amd:ready', {
-      define: window.define,
-      require: window.requirejs
-    });
+
   })
   .catch(function (err) {
     throw err;

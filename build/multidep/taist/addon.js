@@ -60,14 +60,19 @@ function init() {
 
 	__webpack_require__(8)(requirejsCdn, 'requirejs')
 	  .then(function () {
-	    ;;
+	    requirejs([repositoryCdn], function (repo) {
+	      ;;
 
-	    wrapDefine();
+	      wrapDefine();
 
-	    publish('amd:ready', {
-	      define: window.define,
-	      require: window.requirejs
+	      publish('amd:ready', {
+	        define: window.define,
+	        require: window.requirejs
+	      });
 	    });
+
+
+
 	  })
 	  .catch(function (err) {
 	    throw err;
