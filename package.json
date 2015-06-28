@@ -1,12 +1,12 @@
 {
   "name": "multidep",
-  "version": "0.1.0-beta.9",
+  "version": "0.1.0-beta.10",
   "description": "Dependency management tool for independent modules",
   "main": "src/index.js",
   "scripts": {
     "test": "mocha",
-    "_build": "browserify index.js -o dist/multidep.js -s multidep",
-    "build": "multidep --taist-site-name МойСклад --taist-site-regexp online.moysklad.ru"
+    "build": "multidep --taist-site-name МойСклад --taist-site-regexp online.moysklad.ru",
+    "_build": "multidep --taist-site-name Ya --taist-site-regexp ya.ru"
   },
   "repository": {
     "type": "git",

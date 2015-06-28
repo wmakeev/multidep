@@ -52,27 +52,33 @@ function init() {
 	var wrapDefine = __webpack_require__(7);
 
 	var requirejsCdn    = 'https://cdn.jsdelivr.net/requirejs/2.1.14/require.min.js';
-	var repositoryCdn   = 'https://cdn.rawgit.com/wmakeev/multiversion-repository/1.0.0/multiversion-repository.js';
+	var repositoryCdn   = 'https://cdn.rawgit.com/wmakeev/multiversion-repository/2.0.1/multiversion-repository.js';
 	// TODO move to cdn
-	var multiversionCdn = 'https://rawgit.com/wmakeev/requirejs-multiversion/master/build/multiver';
+	var multiverCdn = 'https://rawgit.com/wmakeev/requirejs-multiversion/master/build/multiver';
 
 	var protocol = window.location.protocol;
 
 	__webpack_require__(8)(requirejsCdn, 'requirejs')
 	  .then(function () {
-	    requirejs([repositoryCdn], function (repo) {
-	      ;;
-
-	      wrapDefine();
-
-	      publish('amd:ready', {
-	        define: window.define,
-	        require: window.requirejs
-	      });
+	    var r = requirejs; // FIXIT Webpack hack (webpack deleting requirejs.config, bug?)
+	    r.config({
+	      paths: {
+	        multiver: multiverCdn
+	      },
+	      config: {
+	        multiver: {
+	          repository: repositoryCdn,
+	          resolver: resolver
+	        }
+	      }
 	    });
 
+	    wrapDefine();
 
-
+	    publish('amd:ready', {
+	      define: window.define,
+	      require: window.requirejs
+	    });
 	  })
 	  .catch(function (err) {
 	    throw err;
