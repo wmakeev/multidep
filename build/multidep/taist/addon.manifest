@@ -1,9 +1,1 @@
-{
-  "siteName": "МойСклад",
-  "siteRegexp": "online.moysklad.ru",
-  "id": "multidep",
-  "js": "addon.js",
-  "title": "multidep@0.1.0-beta.11",
-  "shortDescription": "Dependency management tool for independent modules",
-  "description": "addon.md"
-}
+{"siteName":"МойСклад","siteRegexp":"online.moysklad.ru","id":"multidep","js":"addon.js","title":"multidep@0.1.0-beta.12","shortDescription":"Dependency management tool for independent modules","description":"addon.md"}
