@@ -52,7 +52,7 @@ function init() {
 	var wrapDefine = __webpack_require__(7);
 
 	var requirejsCdn    = 'https://cdn.jsdelivr.net/requirejs/2.1.14/require.min.js';
-	var repositoryCdn   = 'https://cdn.rawgit.com/wmakeev/multiversion-repository/2.0.1/multiversion-repository.js';
+	var repositoryCdn   = 'https://cdn.rawgit.com/wmakeev/multiversion-repository/2.0.3/multiversion-repository.js';
 	// TODO move to cdn
 	var multiverCdn = 'https://rawgit.com/wmakeev/requirejs-multiversion/master/build/multiver';
 
@@ -1491,7 +1491,7 @@ function init() {
 
 	  var listener = function (ev) {
 	    ev = ev.detail;
-	    if (ev && ev.key === key && !discoveredEventsIds.hasOwnProperty(ev.id)) {
+	    if (ev && ev.id && ev.key === key && !discoveredEventsIds.hasOwnProperty(ev.id)) {
 	      discoveredEventsIds[ev.id] = true;
 	      handler(ev.value, stop);
 	    }
