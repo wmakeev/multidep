@@ -47,32 +47,21 @@ function init() {
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var publish = __webpack_require__(1);
-	var resolver = __webpack_require__(3);
-	var wrapDefine = __webpack_require__(5);
-
-	// Not paths links with .js
-	var requirejsCdn = 'https://cdn.jsdelivr.net/requirejs/2.1.14/require.min.js';
-	var repositoryCdn = 'https://rawgit.com/wmakeev/multiversion-repository/master/multiversion-repository.js'; // TODO move to cdn
-	//var repositoryCdn   = 'https://cdn.rawgit.com/wmakeev/multiversion-repository/2.0.4/multiversion-repository.js';
-
-	// Require.js paths w/o .js
-	var multiverCdn = 'https://rawgit.com/wmakeev/requirejs-multiversion/master/build/multiver'; // TODO move to cdn
-	var semverCdn = 'https://cdn.rawgit.com/wmakeev/node-semver/5284ffbd6f25fa5f576b9e563b0a401a2a94d252/dist/semver';
+	var config      = __webpack_require__(1);
+	var publish     = __webpack_require__(2);
+	var resolver    = __webpack_require__(4);
+	var wrapDefine  = __webpack_require__(6);
 
 	var protocol = window.location.protocol;
 
-	__webpack_require__(6)(requirejsCdn, 'requirejs')
+	__webpack_require__(7)(config.cdn.requirejs, 'requirejs')
 	  .then(function () {
 	    var r = requirejs; // FIXIT Webpack hack (webpack deleting requirejs.config, bug?)
 	    r.config({
-	      paths: {
-	        semver: semverCdn,
-	        multiver: multiverCdn
-	      },
+	      paths: config.paths,
 	      config: {
 	        multiver: {
-	          repository: repositoryCdn,
+	          repository: config.cdn.repository,
 	          resolver: resolver,
 	          fallBackToParentRequire: true
 	        }
@@ -90,11 +79,27 @@ function init() {
 	    throw err;
 	  });
 
+
 /***/ },
 /* 1 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	  paths: {
+	    multiver: 'https://rawgit.com/wmakeev/requirejs-multiversion/master/dist/multiver',
+	    semver: 'https://cdn.rawgit.com/wmakeev/node-semver/5284ffbd6f25fa5f576b9e563b0a401a2a94d252/dist/semver'
+	  },
+	  cdn: {
+	    requirejs: 'https://cdn.jsdelivr.net/requirejs/2.1.14/require.min.js',
+	    repository: 'https://rawgit.com/wmakeev/multiversion-repository/master/multiversion-repository.js'
+	  }
+	};
+
+/***/ },
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var guid = __webpack_require__(2);
+	var guid = __webpack_require__(3);
 
 	module.exports = function publish(key, value) {
 	  var id = Math.random().toString();
@@ -131,19 +136,19 @@ function init() {
 	};
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports) {
 
 	module.exports = "70152108-2745-4c6a-b529-c4fe10e488a7";
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// https://regex101.com/r/tU5aI9/2
 	var moduleNameRegex = /^((?:@[\w\-]+\/)?[\w\-]+)(?:@([0-9\.]+))?$/;
 
-	var discover = __webpack_require__(4);
+	var discover = __webpack_require__(5);
 
 
 	module.exports = {
@@ -197,10 +202,10 @@ function init() {
 	};
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var guid = __webpack_require__(2);
+	var guid = __webpack_require__(3);
 
 	module.exports = function discover(key, handler) {
 	  var discoveredEventsIds = {};
@@ -233,10 +238,10 @@ function init() {
 	};
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var publish = __webpack_require__(1);
+	var publish = __webpack_require__(2);
 
 	module.exports = function () {
 	  var _oldDefine = window.define;
@@ -262,7 +267,7 @@ function init() {
 	};
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports) {
 
 	module.exports = function (src, globalName) {
