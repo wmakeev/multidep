@@ -5,6 +5,7 @@ module.exports = {
   },
   cdn: {
     requirejs: 'https://cdn.jsdelivr.net/requirejs/2.1.14/require.min.js',
-    repository: 'https://rawgit.com/wmakeev/multiversion-repository/master/multiversion-repository.js'
+    repository: 'https://rawgit.com/wmakeev/multiversion-repository/master/multiversion-repository.js',
+    babelHelpers: 'https://rawgit.com/wmakeev/babel-external-helpers/master/external-helpers.min.js'
   }
 };

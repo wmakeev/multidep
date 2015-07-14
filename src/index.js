@@ -2,11 +2,14 @@ var config      = require('./config');
 var publish     = require('@wmakeev/locator/publish');
 var resolver    = require('./module-resolver');
 var wrapDefine  = require('./wrap-define');
+var loadScript  = require('./load-script');
 
 var protocol = window.location.protocol;
 
-require('./load-script')(config.cdn.requirejs, 'requirejs')
-  .then(function () {
+Promise.all([
+  loadScript(config.cdn.requirejs, 'requirejs'),
+  loadScript(config.cdn.babelHelpers, 'babelHelpers')
+]).then(function () {
     var r = requirejs; // FIXIT Webpack hack (webpack deleting requirejs.config, bug?)
     r.config({
       paths: config.paths,

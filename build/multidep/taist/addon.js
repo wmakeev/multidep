@@ -51,11 +51,14 @@ function init() {
 	var publish     = __webpack_require__(2);
 	var resolver    = __webpack_require__(4);
 	var wrapDefine  = __webpack_require__(6);
+	var loadScript  = __webpack_require__(7);
 
 	var protocol = window.location.protocol;
 
-	__webpack_require__(7)(config.cdn.requirejs, 'requirejs')
-	  .then(function () {
+	Promise.all([
+	  loadScript(config.cdn.requirejs, 'requirejs'),
+	  loadScript(config.cdn.babelHelpers, 'babelHelpers')
+	]).then(function () {
 	    var r = requirejs; // FIXIT Webpack hack (webpack deleting requirejs.config, bug?)
 	    r.config({
 	      paths: config.paths,
@@ -91,7 +94,8 @@ function init() {
 	  },
 	  cdn: {
 	    requirejs: 'https://cdn.jsdelivr.net/requirejs/2.1.14/require.min.js',
-	    repository: 'https://rawgit.com/wmakeev/multiversion-repository/master/multiversion-repository.js'
+	    repository: 'https://rawgit.com/wmakeev/multiversion-repository/master/multiversion-repository.js',
+	    babelHelpers: 'https://rawgit.com/wmakeev/babel-external-helpers/master/external-helpers.min.js'
 	  }
 	};
 
