@@ -18,8 +18,8 @@ require('./load-script')(requirejsCdn, 'requirejs')
     var r = requirejs; // FIXIT Webpack hack (webpack deleting requirejs.config, bug?)
     r.config({
       paths: {
-        multiver: multiverCdn,
-        semver: semverCdn
+        semver: semverCdn,
+        multiver: multiverCdn
       },
       config: {
         multiver: {
