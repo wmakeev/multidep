@@ -1,36 +1,55 @@
-var semver = require('../vendor/semver');
+// https://regex101.com/r/tU5aI9/2
+var moduleNameRegex = /^((?:@[\w\-]+\/)?[\w\-]+)(?:@([0-9\.]+))?$/;
+
 var discover = require('@wmakeev/locator/discover');
 
+
 module.exports = {
-  resolve: function (name, version, cb) {
+  /**
+   * Module resolver
+   *
+   * @param name Name or url of module to require it with requirejs
+   * @param versionRange= Module version range (optional)
+   * @param cb
+   */
+  resolve: function resolve(name, versionRange, cb) {
+    var discovering;
     var resolved = false;
-    discover('amd:module', function (data, stop) {
-      var moduleName = data.name;
-      var moduleVersion = 'default';
 
-      if (name === moduleName && (version === moduleVersion || !version)) {
-        resolved = true;
-        stop();
-        cb(null, moduleName);
-      }
+    function resolve(resolvedName) {
+      resolved = true;
+      discovering.stop();
+      cb(null, resolvedName);
+    }
 
-      var nameVersion = moduleName.split('@');
-      if (nameVersion.length === 2 && nameVersion[0]) {
-        moduleName = nameVersion[0];
-        moduleVersion = nameVersion[1];
-        if (moduleVersion === 'default' && semver.satisfies()) {
-          resolved = true;
-          stop();
-          cb(null, moduleName);
+    function discoverHandler(data) {
+      if (!data.name) return;
+
+      var match = data.name.match(moduleNameRegex);
+      var moduleName = match[1];
+      var moduleVersion = match[2];
+
+      if (name === moduleName) {
+        if (versionRange === '*' || !versionRange) {
+          resolve(data.name)
+        }
+        else {
+          requirejs(['semver'], function (semver) {
+            if (semver.satisfies(moduleVersion, versionRange)) {
+              resolve(data.name)
+            }
+          });
         }
       }
+    }
 
-      setTimeout(function () {
-        if (!resolved) {
-          stop();
-          cb(new Error(name + '@' + version + ' resolve timeout'));
-        }
-      }, 15000)
-    });
+    discovering = discover('amd:module', discoverHandler);
+
+    setTimeout(function () {
+      if (!resolved) {
+        if (discovering) { discovering.stop() }
+        cb(new Error(name + (versionRange ? '@' + versionRange : '') + ' lib resolve timeout'));
+      }
+    }, 10000)
   }
 };
