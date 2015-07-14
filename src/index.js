@@ -24,7 +24,8 @@ require('./load-script')(requirejsCdn, 'requirejs')
       config: {
         multiver: {
           repository: repositoryCdn,
-          resolver: resolver
+          resolver: resolver,
+          fallBackToParentRequire: true
         }
       }
     });

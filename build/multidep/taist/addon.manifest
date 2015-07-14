@@ -3,7 +3,7 @@
   "siteRegexp": "online.moysklad.ru",
   "id": "multidep",
   "js": "addon.js",
-  "title": "multidep@0.0.14",
+  "title": "multidep@0.0.15",
   "shortDescription": "Dependency management tool for independent modules",
   "description": "addon.md"
 }

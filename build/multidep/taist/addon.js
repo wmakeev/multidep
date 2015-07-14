@@ -73,7 +73,8 @@ function init() {
 	      config: {
 	        multiver: {
 	          repository: repositoryCdn,
-	          resolver: resolver
+	          resolver: resolver,
+	          fallBackToParentRequire: true
 	        }
 	      }
 	    });
