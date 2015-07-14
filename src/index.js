@@ -8,7 +8,8 @@ var protocol = window.location.protocol;
 
 Promise.all([
   loadScript(config.cdn.requirejs, 'requirejs'),
-  loadScript(config.cdn.babelHelpers, 'babelHelpers')
+  loadScript(config.cdn.browserPolyfill)
+  //loadScript(config.cdn.babelHelpers, 'babelHelpers')
 ]).then(function () {
     var r = requirejs; // FIXIT Webpack hack (webpack deleting requirejs.config, bug?)
     r.config({
