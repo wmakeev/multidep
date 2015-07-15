@@ -20,7 +20,8 @@ Promise.all([
           resolver: resolver,
           fallBackToParentRequire: true
         }
-      }
+      },
+      waitSeconds: config.timeout + 1
     });
 
     wrapDefine();

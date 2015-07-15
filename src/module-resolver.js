@@ -1,5 +1,6 @@
 // https://regex101.com/r/tU5aI9/2
 var moduleNameRegex = /^((?:@[\w\-]+\/)?[\w\-]+)(?:@([0-9\.]+))?$/;
+var config = require('./config');
 
 var discover = require('@wmakeev/locator/discover');
 
@@ -48,8 +49,8 @@ module.exports = {
     setTimeout(function () {
       if (!resolved) {
         if (discovering) { discovering.stop() }
-        cb(new Error(name + (versionRange ? '@' + versionRange : '') + ' lib resolve timeout'));
+        cb(new Error(name + (versionRange ? '@' + versionRange : '') + ' resolve timeout'));
       }
-    }, 10000)
+    }, config.timeout * 1000)
   }
 };

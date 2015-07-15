@@ -69,7 +69,8 @@ function init() {
 	          resolver: resolver,
 	          fallBackToParentRequire: true
 	        }
-	      }
+	      },
+	      waitSeconds: config.timeout + 1
 	    });
 
 	    wrapDefine();
@@ -98,7 +99,8 @@ function init() {
 	    repository: 'https://rawgit.com/wmakeev/multiversion-repository/master/multiversion-repository.js',
 	    babelHelpers: 'https://rawgit.com/wmakeev/babel-external-helpers/master/external-helpers.min.js',
 	    browserPolyfill: 'https://rawgit.com/wmakeev/babel-external-helpers/master/browser-polyfill.min.js'
-	  }
+	  },
+	  timeout: 10
 	};
 
 /***/ },
@@ -153,6 +155,7 @@ function init() {
 
 	// https://regex101.com/r/tU5aI9/2
 	var moduleNameRegex = /^((?:@[\w\-]+\/)?[\w\-]+)(?:@([0-9\.]+))?$/;
+	var config = __webpack_require__(1);
 
 	var discover = __webpack_require__(5);
 
@@ -201,9 +204,9 @@ function init() {
 	    setTimeout(function () {
 	      if (!resolved) {
 	        if (discovering) { discovering.stop() }
-	        cb(new Error(name + (versionRange ? '@' + versionRange : '') + ' lib resolve timeout'));
+	        cb(new Error(name + (versionRange ? '@' + versionRange : '') + ' resolve timeout'));
 	      }
-	    }, 10000)
+	    }, config.timeout * 1000)
 	  }
 	};
 
