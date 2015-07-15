@@ -18,7 +18,7 @@ Promise.all([
         multiver: {
           repository: config.cdn.repository,
           resolver: resolver,
-          fallBackToParentRequire: true
+          fallBackToParentRequire: false
         }
       },
       waitSeconds: config.timeout + 1
