@@ -1,7 +1,8 @@
 function init() {
 
   function startModule(taistApi, entryPoint) {
-    /******/ (function(modules) { // webpackBootstrap
+    // Build time: Mon Jul 20 2015 21:02:20 GMT+0500 (UZT)
+/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 
@@ -47,39 +48,45 @@ function init() {
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var config      = __webpack_require__(1);
-	var publish     = __webpack_require__(2);
-	var resolver    = __webpack_require__(4);
-	var wrapDefine  = __webpack_require__(6);
-	var loadScript  = __webpack_require__(7);
+	var config = __webpack_require__(1);
+	var publish = __webpack_require__(2);
+	var resolver = __webpack_require__(4);
+	var wrapDefine = __webpack_require__(6);
+	var loadScript = __webpack_require__(7);
 
 	var protocol = window.location.protocol;
+	// TODO Remove (temp)
+	var oldRequire = window.require;
 
 	Promise.all([
 	  loadScript(config.cdn.requirejs, 'requirejs'),
 	  loadScript(config.cdn.browserPolyfill)
 	  //loadScript(config.cdn.babelHelpers, 'babelHelpers')
 	]).then(function () {
-	    var r = requirejs; // FIXIT Webpack hack (webpack deleting requirejs.config, bug?)
-	    r.config({
-	      paths: config.paths,
-	      config: {
-	        multiver: {
-	          repository: config.cdn.repository,
-	          resolver: resolver,
-	          fallBackToParentRequire: false
-	        }
-	      },
-	      waitSeconds: config.timeout + 1
-	    });
+	  // TODO Remove (temp)
+	  if (oldRequire) {
+	    window.require = oldRequire;
+	  }
+	  var r = requirejs; // FIXIT Webpack hack (webpack deleting requirejs.config, bug?)
+	  r.config({
+	    paths: config.paths,
+	    config: {
+	      multiver: {
+	        repository: config.cdn.repository,
+	        resolver: resolver,
+	        fallBackToParentRequire: false
+	      }
+	    },
+	    waitSeconds: config.timeout + 1
+	  });
 
-	    wrapDefine();
+	  wrapDefine();
 
-	    publish('amd:ready', {
-	      define: window.define,
-	      require: window.requirejs
-	    });
-	  })
+	  publish('amd:ready', {
+	    define: window.define,
+	    require: window.requirejs
+	  });
+	})
 	  .catch(function (err) {
 	    throw err;
 	  });
